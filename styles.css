@@ -4,6 +4,18 @@
     box-sizing: border-box;
 }
 
+:root {
+    --background-color: #f4f3ed;
+    --white: #ffffff;
+    --button: #246a73;
+    --blue: linear-gradient(to right, #787CFE, #48BED9);
+    --yellow: linear-gradient(to right, #ffcc00, #ffeb99);
+    --red: linear-gradient(to right, #d21814, #e52f26, #f45855);
+    --orange: linear-gradient(to right, #b34700, #ff751a, #ff944d);
+    --pink: linear-gradient(to right, #db2265, #ff5969);
+}
+
+
 button {
     cursor: pointer;
 }
@@ -17,13 +29,35 @@ body {
     height: 100vh;
 }
 
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    text-align: center;
+}
+
 .container {
-    padding: 16px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+
+    background-color: var(--background-color);
+}
+
+.content {
+    max-width: 390px;
+    padding: 40px 20px;
+
+    background-color: #a8dadc;
 }
 
 .container__button {
     margin-bottom: 16px;
-    width: 280px;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
@@ -31,8 +65,8 @@ body {
 
 .container__button button {
     border: none;
-    background: #1e2ede;
-    color: #fff;
+    background: var(--button);
+    color: var(--white);
     font-size: 16px;
     font-weight: bold;
     border-radius: 7px;
@@ -52,7 +86,7 @@ body {
 .grid {
     width: 200px;
     height: 400px;
-    background-color: green;
+    background-color: var(--background-color);
     display: flex;
     flex-wrap: wrap;
 }
@@ -71,7 +105,7 @@ body {
 .mini__grid {
     width: 120px;
     height: 120px;
-    background-color: green;
+    background-color: var(--background-color);
     display: flex;
     flex-wrap: wrap;
 }
@@ -87,28 +121,28 @@ body {
 }
 
 .shapePainted {
-    background: red;
-    border: 2px solid black;
+    background: var(--red);
+    border: 1px solid black;
 }
 
 .blue {
-    background: linear-gradient(to right, #0033cc, #99b3ff);
+    background: var(--blue);
 }
   
 .yellow {
-    background: linear-gradient(to right, #ffcc00, #ffeb99);
+    background: var(--yellow)
 }
   
 .red {
-    background: linear-gradient(to right, #ff3300, #ff5c33, #ff8566);
+    background: var(--red)
 }
   
 .orange {
-    background: linear-gradient(to right, #b34700, #ff751a, #ff944d);
+    background: var(--orange)
 }
   
 .pink {
-    background: linear-gradient(to right, #cc0099, #ff80ff, #ff99ff);
+    background: var(--pink)
 }
 
 .mobile-buttons-container {
@@ -127,7 +161,9 @@ body {
 }
 
 @media (max-width: 990px) {
-    .mobile-buttons-container {
+    .mobile-buttons-container {        
+        margin-left: auto;
+        margin-right: auto;
         margin-top: 20px;
         max-width: 300px;
         display: grid;
