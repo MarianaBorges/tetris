@@ -1,47 +1,16 @@
-const gridWidth = 10;
+"use strict" 
+
+import '../css/styles.css'
+
+import { allShapes, gridWidth } from '../utils/shapes.js'
+import { colors } from '../utils/colors.js'
+import { draw, undraw } from './draw.js'
+
+
 const shapeFreezeAudio = new Audio("./audio/audios_tetraminoFreeze.wav")
 const completedLineAudio = new Audio("./audio/audios_completedLine.wav")
 const gameOverAudio = new Audio("./audio/audios_gameOver.wav")
 
-// shapes 
-const lShape = [
-    [1, 2, gridWidth + 1, gridWidth*2+1],
-    [gridWidth , gridWidth+1, gridWidth+2, gridWidth*2+2],
-    [2, gridWidth+2, gridWidth*2+1, gridWidth*2+2],
-    [gridWidth , gridWidth*2, gridWidth*2+1, gridWidth*2+2],
-]
-
-const zShape = [
-    [gridWidth+1, gridWidth+2, gridWidth*2, gridWidth*2+1],
-    [0, gridWidth, gridWidth+1, gridWidth*2+1], 
-    [gridWidth+1, gridWidth+2, gridWidth*2, gridWidth*2+1],
-    [0, gridWidth, gridWidth+1, gridWidth*2+1]
-]
-
-const tShape = [
-    [1, gridWidth, gridWidth+1, gridWidth+2],
-    [1, gridWidth+1, gridWidth+2, gridWidth*2+1],
-    [gridWidth, gridWidth+1, gridWidth+2, gridWidth*2+1],
-    [1, gridWidth, gridWidth+1, gridWidth*2+1]
-]
-
-const oShape = [
-    [0, 1, gridWidth, gridWidth+1],
-    [0, 1, gridWidth, gridWidth+1],
-    [0, 1, gridWidth, gridWidth+1],
-    [0, 1, gridWidth, gridWidth+1]
-]
-
-const iShape = [
-    [1, gridWidth+1, gridWidth*2+1, gridWidth*3+1],
-    [gridWidth, gridWidth+1, gridWidth+2, gridWidth+3],
-    [1, gridWidth+1, gridWidth*2+1, gridWidth*3+1],
-    [gridWidth, gridWidth+1, gridWidth+2, gridWidth+3],
-]
-
-const allShapes = [lShape, zShape, tShape, oShape, iShape];
-
-const colors = ["blue", "yellow", "red", "orange", "pink"]
 let currentColor = Math.floor(Math.random() * colors.length)
 let nextColor = colors[currentColor]
 
@@ -51,26 +20,13 @@ let randomShape = Math.floor(Math.random() * allShapes.length);
 let currentShape = allShapes[randomShape][currentRotation];
 let $gridSquares = Array.from(document.querySelectorAll(".grid div"));
 
-function draw() {
-    currentShape.forEach(squereIndex => {
-        $gridSquares[squereIndex + currentPosition].classList.add("shapePainted", `${colors[currentColor]}`);
-    })
-}
-
-draw();
-
-function undraw() {
-    currentShape.forEach(squereIndex => {
-        $gridSquares[squereIndex + currentPosition].classList.remove("shapePainted", `${colors[currentColor]}`);
-    });
-}
+draw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
 
 const $restartButton = document.getElementById("container__button-restart")
 $restartButton.addEventListener("click", ()=> {
     window.location.reload()
 })
 
-// setInterval(moveDown, 600);
 let timeMoveDown = 600
 let timerId = null
 const $startStopButton = document.getElementById("container__button-start")
@@ -85,14 +41,13 @@ $startStopButton.addEventListener("click", () => {
 
 function moveDown() {
     freeze();
-    undraw();
+    undraw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
     currentPosition += 10;
-    draw();
+    draw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
 }
 
 function freeze() {
-    // console.log($gridSquares[currentShape[0] + currentPosition + gridWidth])
-    if(currentShape.some(squareIndex =>
+   if(currentShape.some(squareIndex =>
         $gridSquares[squareIndex + currentPosition + gridWidth].classList.contains("filled")
     )){
         currentShape.forEach(squareIndex => 
@@ -104,10 +59,10 @@ function freeze() {
         randomShape = nextRandomShape;
         currentShape = allShapes[randomShape][currentRotation];
         currentColor = nextColor
-        draw();
+        draw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
         checkIfRowIsFilled()
         updateScore(13)
-        shapeFreezeAudio.play()
+        // shapeFreezeAudio.play()
         displayNextShape()
         gameOver();
     }
@@ -122,9 +77,9 @@ function moveLeft() {
         previousRotation()
     }
 
-    undraw();
+    undraw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
     currentPosition--;
-    draw();
+    draw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
 }
 
 function moveRight() {
@@ -134,9 +89,9 @@ function moveRight() {
     let isFilled = currentShape.some(squareIndex => $gridSquares[squareIndex + currentPosition + 1].classList.contains('filled'))
     if (isFilled) return;
 
-    undraw();
+    undraw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
     currentPosition++;
-    draw();
+    draw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
 }
 
 function previousRotation() {
@@ -149,7 +104,7 @@ function previousRotation() {
 }
 
 function rotate() {
-    undraw();
+    undraw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
 
     if(currentRotation === currentShape.length - 1){
         currentRotation = 0;
@@ -169,7 +124,7 @@ function rotate() {
         previousRotation();
     }
 
-    draw();
+    draw({currentShape, gridSquares: $gridSquares, currentPosition, currentColor: colors[currentColor]});
 }
 
 let $grid = document.querySelector(".grid")
@@ -190,7 +145,7 @@ function checkIfRowIsFilled() {
             $gridSquares = squaresRemoved.concat($gridSquares)
             $gridSquares.forEach(square => $grid.appendChild(square))
             updateScore(97)
-            completedLineAudio.play()
+            // completedLineAudio.play()
         }
     }
 }
@@ -248,7 +203,7 @@ function gameOver() {
         clearInterval(timerId)
         timerId = null
         $startStopButton.disabled = true
-        gameOverAudio.play()
+        // gameOverAudio.play()
         $score.innerHTML+= "<br/>" + "GAME OVER"
     }
 }
