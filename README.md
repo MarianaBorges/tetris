@@ -14,3 +14,5 @@ de desenho das formas do jogo.
 ```bash
 npm run dev
 ```
+
+[Link do git hub pages](https://marianaborges.github.io/tetris/)
